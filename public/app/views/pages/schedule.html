@@ -1,0 +1,141 @@
+<div class="container fill" >
+
+    <div class="row">
+
+			<div class="fixeddiv">
+				<h3>{{schedule.chosenDate | date}}</h3> 
+	Duration:
+			<div id="sel1">
+			  <select class="form-control form-small" style="width:auto" ng-model="schedule.bookingDuration" ng-change="schedule.createTimeSlots()" ng-options="item as item.duration/2 for item in schedule.validDurations">
+					<option value="" ng-if="false"></option> 
+			  </select>
+			</div>
+			hours
+
+			<div id="equip">
+
+				<div class="btn-group">
+                  <label class="btn btn-info">
+                    <input type="checkbox" ng-model="schedule.equipment.laptop" ng-change="schedule.createTimeSlots()"><i class='fa fa-laptop'></i>
+                  </label>
+                  <label class="btn btn-info">
+                    <input type="checkbox" ng-model="schedule.equipment.projector" ng-change="schedule.createTimeSlots()"><i class='fa fa-video-camera fg-lg'></i>         
+                </label>
+                </div>
+			</div>
+
+		</div>	 
+	 
+    <div class="col-xs-1 col-md-3 "  ></div>
+    <div class="col-xs-10 col-md-6" id="centre">
+            
+            <!-- buttons -->
+
+            <div id="incentre">
+			<div id="timeselector">
+
+				<ul>
+					<div ng-repeat="item in schedule.timeSlots">
+						<li class="buttonlist">
+							<button id="{{item.index}}" class="btn btn-large btn-block btn-info" ng-disabled="item.room" ng-click="schedule.selectedTimeSlot = item; schedule.buttonToggle($index)"> {{(item.hour > 12) && (item.hour - 12) || (item.hour)}}:{{(item.minutes == 0) && ('00') || item.minutes}} {{(item.hour > 11) && ('PM') || ('AM')}}<span><i class="fa fa-video-camera" style="color:black; float:right;" ng-if="item.projector"></i>
+								<i class="fa fa-video-camera" style="color:grey; float:right;" ng-if="item.projector == false"></i>
+								<i class="fa fa-laptop" style="color:black; display:inline-block; float:right; margin-right:10px;" ng-if="item.laptop"></i>
+								<i class="fa fa-laptop" style="color:grey; display:inline-block;  float:right; margin-right:10px;" ng-if="item.laptop == false"></i></span>
+
+								
+							</button>
+							
+						</li>
+					</div>
+				<ul>
+			</div>
+            </div>
+			</div>
+        <div class="col-xs-1 col-md-3"  ></div>
+
+
+</div><!-- /.container -->
+
+<div class="container" ng-controller = "bookingCreatorController as booker">
+	 <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content"> 
+        <div class="modal-header">
+          <h4 class="modal-title">Your booking has been created.</h4>
+        </div>
+        <div class="modal-body">
+		<div class="modal-body">
+	           <div class="panel-body" style="padding:0px;">
+                    <table class="table table-striped" style="margin-bottom: 0px;" showHeader="false">
+                      <tbody align="left">
+                        <tr>
+                          <td><strong>Date:</strong></td>
+                          <td>{{modalinfo.startTime | date : 'mediumDate'}} </td>
+                        </tr>
+                        <tr>
+                          <td><strong>From:</strong></td>
+                          <td>{{modalinfo.startTime | date : 'shortTime'}}</td>
+                        </tr>
+                        <tr>
+                          <td><strong>To:</strong></td>
+                          <td>{{modalinfo.endTime | date : 'shortTime' }}
+                               
+                         </td>
+                        </tr>
+
+                        <tr>
+                          <td><strong>Room Number:</strong></td>
+                          <td>{{modalinfo.room_id}}</td>
+                        </tr>
+
+                        <tr>
+                          <td><strong>Laptop ID:</strong></td>
+                          <td ng-if="modalinfo.laptop_id == -1" >None</i>    
+                          </td>
+                          <td ng-if="modalinfo.laptop_id != -1" >{{modalinfo.laptop_id}}</i>    
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><strong>Projector ID:</strong></td>
+                          <td ng-if="modalinfo.projector_id == -1" >None</i>    
+                          </td>
+                          <td ng-if="modalinfo.projector_id != -1" >{{modalinfo.projector_id}}</i>    
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                </div>
+	      </div>
+        </div>
+        <div class="modal-footer">
+          <button onclick="window.location.href='/profile'" ng-click="" class="btn btn-default">OK</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+
+<nav class="navbar navbar-default navbar-fixed-bottom" ng-controller = "bookingCreatorController as booker" >
+      <div class="container" >
+
+        <div class="navbar-header navbar-left col-xs-3">
+          <!--<a class="navbar-brand" href="#">BookMyRoom</a>-->
+          <a href="/" class="btn navbar-btn btn-default btn-small">Back</a>
+        </div>
+        
+
+
+       <div class=" navbar-right">
+
+   <button  class="btn btn-default navbar-btn" data-toggle="modal" data-target="#myModal" data-backdrop="static" ng-if="schedule.selectedTimeSlot" ng-click="schedule.setBookingInformation(); booker.createBooking()">Confirm</button>
+
+     
+      </div>
+
+ </div>
+</nav>
